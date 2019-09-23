@@ -21,9 +21,8 @@ public class LockScreenAccessibilityService extends AccessibilityService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
-        if (action.equals(MainActivity.ACTION_LOCK_SCREEN)) {
-            Boolean isSuccessful = performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN);
-            if (isSuccessful) {
+        if (action != null && action.equals(MainActivity.ACTION_LOCK_SCREEN)) {
+            if (performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)) {
                 performVibration();
             } else {
                 openSettings();
@@ -34,6 +33,8 @@ public class LockScreenAccessibilityService extends AccessibilityService {
 
     private void performVibration() {
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        if (vibrator == null) return;
 
         VibrationEffect effect = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                 ? VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK)
